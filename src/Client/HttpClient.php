@@ -246,4 +246,19 @@ final class HttpClient implements \Serializable
 
         throw MissingContentTypeException::make();
     }
+
+    public function __serialize(): array
+    {
+        return [
+            'host' => $this->client->host,
+            'port' => $this->client->port,
+            'ssl' => $this->client->ssl,
+            'options' => $this->client->setting,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->client = self::makeSwooleClient($data['host'], $data['port'], $data['ssl'], $data['options']);
+    }
 }
